@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "49602864473",
+    "firebase_url": "https://solemne3-949af-default-rtdb.firebaseio.com",
+    "project_id": "solemne3-949af",
+    "storage_bucket": "solemne3-949af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49602864473:android:528b80d37bb9f27c22d848",
+        "android_client_info": {
+          "package_name": "com.example.lenguajes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "49602864473-583fkleope4pi9osae0am55djuhugh2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlOwPUDumzbeDnyikZ_BK-bGc2K-Veby0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "49602864473-583fkleope4pi9osae0am55djuhugh2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

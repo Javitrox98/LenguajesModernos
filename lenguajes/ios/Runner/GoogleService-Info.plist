@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>49602864473-a60rh0m3bslrbsor6kb17ulvhcd7ushn.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.49602864473-a60rh0m3bslrbsor6kb17ulvhcd7ushn</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAKS76U5nTz5RaBbjfVMAP_U7SlDY7P7IU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>49602864473</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.lenguajes</string>
+	<key>PROJECT_ID</key>
+	<string>solemne3-949af</string>
+	<key>STORAGE_BUCKET</key>
+	<string>solemne3-949af.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:49602864473:ios:3578bf4ed0e1a37022d848</string>
+	<key>DATABASE_URL</key>
+	<string>https://solemne3-949af-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
