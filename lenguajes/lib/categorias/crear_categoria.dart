@@ -2,6 +2,43 @@
 
 import 'package:flutter/material.dart';
 
+class Categoria {
+  final String nombre;
+  final String descripcion;
+
+  Categoria({required this.nombre, required this.descripcion});
+}
+
+class ListaCategoriasPage extends StatefulWidget {
+  final List<Categoria> categorias;
+
+  ListaCategoriasPage({required this.categorias});
+
+  @override
+  _ListaCategoriasPageState createState() => _ListaCategoriasPageState();
+}
+
+class _ListaCategoriasPageState extends State<ListaCategoriasPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lista de Categorías'),
+      ),
+      body: ListView.builder(
+        itemCount: widget.categorias.length,
+        itemBuilder: (context, index) {
+          Categoria categoria = widget.categorias[index];
+          return ListTile(
+            title: Text(categoria.nombre),
+            subtitle: Text(categoria.descripcion),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class CrearCategoria extends StatefulWidget {
   // ignore: use_key_in_widget_constructors
   const CrearCategoria({Key? key, required String elemento});
@@ -13,6 +50,7 @@ class CrearCategoria extends StatefulWidget {
 class _CrearCategoriaState extends State<CrearCategoria> {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
+  List<Categoria> categorias = [];
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +92,10 @@ class _CrearCategoriaState extends State<CrearCategoria> {
   }
 
   void guardarCategoria(String nombre, String descripcion) {
-    // Aquí puedes implementar la lógica para guardar la categoría en tu base de datos o en algún otro lugar
-    // Por ejemplo, puedes llamar a una función en tu API para enviar los datos al servidor
-    // O puedes guardar los datos localmente usando algún gestor de estado o una base de datos local
+    Categoria nuevaCategoria =
+        Categoria(nombre: nombre, descripcion: descripcion);
+    categorias.add(nuevaCategoria);
 
-    // Aquí solo mostramos un mensaje de confirmación
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -70,9 +107,14 @@ class _CrearCategoriaState extends State<CrearCategoria> {
             TextButton(
               child: const Text('Aceptar'),
               onPressed: () {
-                // Cerrar el diálogo y la pantalla de creación de categorías
                 Navigator.pop(context);
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ListaCategoriasPage(categorias: categorias),
+                  ),
+                );
               },
             ),
           ],

@@ -3,7 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lenguajes/home.dart';
-import 'package:lenguajes/pages.dart'; // Importa tu archivo PasswordReset aquí
+import 'package:lenguajes/pages.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
