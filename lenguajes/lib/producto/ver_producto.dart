@@ -1,4 +1,5 @@
-import 'package:lenguajes/pages.dart';
+import 'package:flutter/material.dart';
+import 'package:lenguajes/models/proyecto_models.dart';
 
 class VerProducto extends StatelessWidget {
   final Producto producto;
@@ -9,7 +10,7 @@ class VerProducto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('productos'),
+        title: const Text('Producto'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
@@ -52,6 +53,21 @@ class VerProducto extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                producto.imageUrl != null
+                    ? Image.network(
+                        producto.imageUrl!,
+                        height: 300,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            'assets/not_found.jpg',
+                            width: 300,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                    : const SizedBox(height: 16),
                 const SizedBox(height: 10),
                 Text(
                   'Codigo: #${producto.codigo}',

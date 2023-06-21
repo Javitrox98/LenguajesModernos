@@ -1,6 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, unused_element, use_build_context_synchronously, avoid_print, no_leading_underscores_for_local_identifiers, unused_local_variable, unused_field, deprecated_member_use
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lenguajes/pages.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NuevoProducto extends StatefulWidget {
   const NuevoProducto({Key? key}) : super(key: key);
@@ -16,12 +19,35 @@ class _NuevoProductoState extends State<NuevoProducto> {
   final _descripcionController = TextEditingController();
   final _precioController = TextEditingController();
   final _stockController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  File? _imagenFile;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   final CollectionReference _productosCollection =
       FirebaseFirestore.instance.collection('productos');
 
   int _ultimoId = 0;
+  Future<void> _seleccionarImagen() async {
+    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _imagenFile = File(pickedFile.path);
+      }
+    });
+  }
+
+  Future<String> _subirImagen(File imageFile) async {
+    final ref = _storage
+        .ref()
+        .child('productos')
+        .child('${DateTime.now().toIso8601String()}.jpg');
+    final uploadTask = ref.putFile(imageFile);
+    final taskSnapshot = await uploadTask.whenComplete(() {});
+    final url = await taskSnapshot.ref.getDownloadURL();
+    return url;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,11 +187,34 @@ class _NuevoProductoState extends State<NuevoProducto> {
                   },
                 ),
                 const SizedBox(height: 16.0),
+                GestureDetector(
+                  onTap: _seleccionarImagen,
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    color: Colors.grey.shade200,
+                    child: _imagenFile != null
+                        ? Image.file(
+                            _imagenFile!,
+                            fit: BoxFit.cover,
+                          )
+                        : const Icon(Icons.add_a_photo),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
                 Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        if (_imagenFile == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Debe subir una imagen.')));
+                          return;
+                        }
+
+                        final imageUrl = await _subirImagen(_imagenFile!);
                         final nuevoId = (_ultimoId + 1).toString();
                         _ultimoId++;
                         final nuevoProducto = Producto(
@@ -175,6 +224,7 @@ class _NuevoProductoState extends State<NuevoProducto> {
                           descripcion: _descripcionController.text,
                           precio: _precioController.text,
                           stock: int.parse(_stockController.text),
+                          imageUrl: imageUrl,
                         );
 
                         final snapshot = await _productosCollection
@@ -192,6 +242,7 @@ class _NuevoProductoState extends State<NuevoProducto> {
                               descripcion: nuevoProducto.descripcion,
                               precio: nuevoProducto.precio,
                               stock: nuevoProducto.stock,
+                              imageUrl: nuevoProducto.imageUrl,
                             );
 
                             Navigator.pop(context, nuevoProductoConId);
@@ -202,6 +253,8 @@ class _NuevoProductoState extends State<NuevoProducto> {
                                     Text('Error al añadir el producto: $error'),
                               ),
                             );
+                          }).catchError((error) {
+                            print('Error al añadir el producto: $error');
                           });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

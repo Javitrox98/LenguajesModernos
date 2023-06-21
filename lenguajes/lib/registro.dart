@@ -1,18 +1,17 @@
-// ignore_for_file: library_private_types_in_public_api
-
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+import 'package:lenguajes/pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lenguajes/home.dart';
-import 'package:lenguajes/pages.dart'; // Importa tu archivo PasswordReset aquí
+// Asegúrate de importar la página de inicio de sesión
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class Register extends StatefulWidget {
+  const Register({Key? key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> {
+class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   String _email = '';
@@ -21,6 +20,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Registro'),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -31,7 +33,7 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    'Iniciar sesión',
+                    'Crear una cuenta',
                     style: TextStyle(fontSize: 32, color: Colors.blueGrey),
                   ),
                   const SizedBox(height: 32),
@@ -72,49 +74,22 @@ class _LoginState extends State<Login> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          await _auth.signInWithEmailAndPassword(
+                          await _auth.createUserWithEmailAndPassword(
                               email: _email, password: _password);
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
+                          Fluttertoast.showToast(
+                              msg: 'Usuario registrado con éxito');
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomePage(),
+                              builder: (context) => const Login(),
                             ),
                           );
-                          // ignore: unused_catch_clause
                         } on FirebaseAuthException catch (e) {
-                          Fluttertoast.showToast(
-                            msg:
-                                'Error: Correo electrónico o contraseña no válidos',
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.BOTTOM,
-                          );
+                          Fluttertoast.showToast(msg: e.message!);
                         }
                       }
                     },
-                    child: const Text('Entrar'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PasswordReset(),
-                        ),
-                      );
-                    },
-                    child: const Text('Olvidé mi contraseña'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Register(),
-                        ),
-                      );
-                    },
-                    child: const Text('Crear una cuenta'),
+                    child: const Text('Registrar'),
                   ),
                 ],
               ),

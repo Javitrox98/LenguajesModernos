@@ -1,4 +1,6 @@
+import 'package:lenguajes/categorias/list_categorias.dart';
 import 'package:lenguajes/pages.dart';
+import 'package:lenguajes/proveedores/list_proveedores.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -23,13 +25,14 @@ class HomePage extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Sí'),
+                      child: const Text('Cancelar'),
                     ),
                     TextButton(
+                      child: const Text('Si'),
                       onPressed: () {
-                        Navigator.pop(context); // Cierra el diálogo
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacementNamed(context, '/login');
                       },
-                      child: const Text('No'),
                     ),
                   ],
                 ),
@@ -65,12 +68,27 @@ class HomePage extends StatelessWidget {
             ListTile(
               title: const Text('Categorías'),
               onTap: () {
-                // Aquí puedes navegar a la página de categorías
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CrearCategoria(
+                            elemento: '',
+                          )),
+                );
               },
+              // Aquí puedes navegar a la página de categorías
             ),
             ListTile(
               title: const Text('Proveedores'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ListarProveedores(
+                            elemento: '',
+                          )),
+                );
+              },
             ),
           ],
         ),

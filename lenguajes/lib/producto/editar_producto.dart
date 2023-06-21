@@ -1,6 +1,9 @@
 // ignore_for_file: unused_field, library_private_types_in_public_api, prefer_final_fields
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lenguajes/pages.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditarProducto extends StatefulWidget {
   final Producto producto;
@@ -18,6 +21,9 @@ class _EditarProductoState extends State<EditarProducto> {
   final _descripcionController = TextEditingController();
   final _precioController = TextEditingController();
   final _stockController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  File? _imagenFile;
+  String? _imageUrl;
   int _stock = 0;
 
   @override
@@ -29,6 +35,27 @@ class _EditarProductoState extends State<EditarProducto> {
     _descripcionController.text = widget.producto.descripcion;
     _precioController.text = widget.producto.precio;
     _stockController.text = widget.producto.stock.toString();
+    _imagenFile = widget.producto.imagenFile;
+    _imageUrl = widget.producto.imageUrl;
+  }
+
+  Future<void> _seleccionarImagen() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      _imageUrl = await _subirImagen(File(pickedFile.path));
+    }
+  }
+
+  Future<String> _subirImagen(File imageFile) async {
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('productos')
+        .child('${DateTime.now().toIso8601String()}.jpg');
+    final uploadTask = ref.putFile(imageFile);
+    final taskSnapshot = await uploadTask.whenComplete(() {});
+    final url = await taskSnapshot.ref.getDownloadURL();
+    return url;
   }
 
   Future<void> _updateProducto(Producto producto) async {
@@ -42,7 +69,7 @@ class _EditarProductoState extends State<EditarProducto> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Agregar producto'),
+        title: const Text('Editar producto'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
@@ -182,12 +209,33 @@ class _EditarProductoState extends State<EditarProducto> {
                   },
                 ),
                 const SizedBox(height: 16.0),
+                GestureDetector(
+                  onTap: _seleccionarImagen,
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    color: Colors.grey.shade200,
+                    child: _imageUrl != null
+                        ? Image.network(
+                            _imageUrl!,
+                            fit: BoxFit.cover,
+                          )
+                        : widget.producto.imageUrl != null
+                            ? Image.network(
+                                widget.producto.imageUrl!,
+                                fit: BoxFit.cover,
+                              )
+                            : const Icon(Icons.add_a_photo),
+                  ),
+                ),
                 const SizedBox(height: 16.0),
                 Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
+                      if (_formKey.currentState!.validate() &&
+                          (_imageUrl != null ||
+                              widget.producto.imageUrl != null)) {
                         final nuevoProducto = Producto(
                           id: widget.producto.id,
                           codigo: _codigoController.text,
@@ -195,6 +243,9 @@ class _EditarProductoState extends State<EditarProducto> {
                           descripcion: _descripcionController.text,
                           precio: _precioController.text,
                           stock: int.parse(_stockController.text),
+                          imageUrl: _imageUrl != null
+                              ? _imageUrl
+                              : widget.producto.imageUrl,
                         );
                         _updateProducto(nuevoProducto).then((_) {
                           Navigator.pop(context);

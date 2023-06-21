@@ -146,6 +146,7 @@ class _ListarProductoState extends State<ListarProducto> {
                 descripcion: productoData['descripcion'],
                 precio: productoData['precio'],
                 stock: productoData['stock'],
+                imageUrl: productoData['imageUrl'],
               );
 
               return GestureDetector(
@@ -164,6 +165,25 @@ class _ListarProductoState extends State<ListarProducto> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: producto.imageUrl != null
+                              ? Image.network(
+                                  producto.imageUrl!,
+                                  width: 115,
+                                  height: 115,
+                                  fit: BoxFit.cover,
+                                )
+                              : Container(
+                                  width: 115,
+                                  height: 115,
+                                  color: Colors.grey,
+                                  child: const Icon(
+                                    Icons.image,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -219,7 +239,6 @@ class _ListarProductoState extends State<ListarProducto> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // ignore: unused_local_variable
           final nuevoProducto = await Navigator.pushNamed(
             context,
             '/nuevoproducto',
