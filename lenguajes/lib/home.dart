@@ -45,7 +45,14 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Image.asset('assets/home.gif'),
+        child: ListView(
+          children: [
+            Image.asset('assets/home.gif'),
+            Image.asset('assets/pizza.gif'),
+            Image.asset('assets/papas.gif'),
+            // Agrega más imágenes de GIF según sea necesario
+          ],
+        ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -66,8 +73,7 @@ class HomePage extends StatelessWidget {
               children: [
                 Card(
                   child: ListTile(
-                    leading: const Icon(Icons
-                        .production_quantity_limits), // Icono para productos
+                    leading: const Icon(Icons.fastfood), // Icono para productos
                     title: const Text('Productos'),
                     onTap: () {
                       Navigator.push(
