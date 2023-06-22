@@ -1,5 +1,3 @@
-import 'package:lenguajes/categorias/Crear_categoria.dart';
-import 'package:lenguajes/categorias/list_categorias.dart';
 import 'package:lenguajes/pages.dart';
 import 'package:lenguajes/proveedores/list_proveedores.dart';
 
@@ -72,7 +70,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CrearCategoria(
+                      builder: (context) => const ListarCategoria(
                             elemento: '',
                           )),
                 );

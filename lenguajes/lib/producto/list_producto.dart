@@ -144,9 +144,10 @@ class _ListarProductoState extends State<ListarProducto> {
                 codigo: productoData['codigo'],
                 nombre: productoData['nombre'],
                 descripcion: productoData['descripcion'],
-                precio: productoData['precio'],
+                precio: productoData['precio'].toString(),
                 stock: productoData['stock'],
                 imageUrl: productoData['imageUrl'],
+                categoria: productoData['categoria'],
               );
 
               return GestureDetector(
@@ -192,7 +193,6 @@ class _ListarProductoState extends State<ListarProducto> {
                               Text(
                                 producto.nombre,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                 ),
                               ),

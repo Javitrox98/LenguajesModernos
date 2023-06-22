@@ -4,6 +4,7 @@ import 'package:lenguajes/pages.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
 
 class NuevoProducto extends StatefulWidget {
   const NuevoProducto({Key? key}) : super(key: key);
@@ -28,6 +29,28 @@ class _NuevoProductoState extends State<NuevoProducto> {
       FirebaseFirestore.instance.collection('productos');
 
   int _ultimoId = 0;
+
+  // Categorias
+  List<String> _categorias = [];
+  String? _selectedCategoria;
+
+  @override
+  void initState() {
+    super.initState();
+    loadCategorias();
+  }
+
+  void loadCategorias() async {
+    final querySnapshot = await _firestore.collection('categorias').get();
+    _categorias = querySnapshot.docs.map((doc) {
+      final docData = doc.data();
+      final nombre = docData['nombre'].toString();
+      // ignore: unnecessary_string_interpolations
+      return '$nombre';
+    }).toList();
+    setState(() {});
+  }
+
   Future<void> _seleccionarImagen() async {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
@@ -105,6 +128,31 @@ class _NuevoProductoState extends State<NuevoProducto> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'El código es obligatorio';
+                    }
+                    return null;
+                  },
+                ),
+                DropdownButtonFormField<String>(
+                  value: _selectedCategoria,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.category),
+                    labelText: 'Categoria',
+                  ),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedCategoria = newValue;
+                    });
+                  },
+                  items:
+                      _categorias.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'La categoria es obligatoria';
                     }
                     return null;
                   },
@@ -206,67 +254,29 @@ class _NuevoProductoState extends State<NuevoProducto> {
                   alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        if (_imagenFile == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Debe subir una imagen.')));
-                          return;
-                        }
+                      if (_formKey.currentState!.validate() &&
+                          _imagenFile != null) {
+                        _formKey.currentState!.save();
 
-                        final imageUrl = await _subirImagen(_imagenFile!);
-                        final nuevoId = (_ultimoId + 1).toString();
-                        _ultimoId++;
-                        final nuevoProducto = Producto(
-                          id: nuevoId,
-                          codigo: _codigoController.text,
-                          nombre: _nombreController.text,
-                          descripcion: _descripcionController.text,
-                          precio: _precioController.text,
-                          stock: int.parse(_stockController.text),
-                          imageUrl: imageUrl,
-                        );
+                        final String imageUrl =
+                            await _subirImagen(_imagenFile!);
 
-                        final snapshot = await _productosCollection
-                            .where('codigo', isEqualTo: nuevoProducto.codigo)
-                            .get();
+                        final producto = {
+                          'codigo': _codigoController.text,
+                          'categoria': _selectedCategoria!,
+                          'nombre': _nombreController.text,
+                          'descripcion': _descripcionController.text,
+                          'precio': _precioController.text,
+                          'stock': int.parse(_stockController.text),
+                          'imageUrl': imageUrl,
+                        };
 
-                        if (snapshot.docs.isEmpty) {
-                          await _productosCollection
-                              .add(nuevoProducto.toMap())
-                              .then((document) {
-                            final nuevoProductoConId = Producto(
-                              id: nuevoProducto.id,
-                              codigo: nuevoProducto.codigo,
-                              nombre: nuevoProducto.nombre,
-                              descripcion: nuevoProducto.descripcion,
-                              precio: nuevoProducto.precio,
-                              stock: nuevoProducto.stock,
-                              imageUrl: nuevoProducto.imageUrl,
-                            );
+                        await _productosCollection.add(producto);
 
-                            Navigator.pop(context, nuevoProductoConId);
-                          }).catchError((error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text('Error al añadir el producto: $error'),
-                              ),
-                            );
-                          }).catchError((error) {
-                            print('Error al añadir el producto: $error');
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Este producto ya existe, no se agregará un duplicado.'),
-                            ),
-                          );
-                        }
+                        Navigator.of(context).pop();
                       }
                     },
-                    child: const Text('Guardar'),
+                    child: const Text('Agregar Producto'),
                   ),
                 ),
               ],

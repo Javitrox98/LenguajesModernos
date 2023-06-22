@@ -1,9 +1,11 @@
+import 'package:lenguajes/categorias/crear_%20categoria.dart';
 import 'package:lenguajes/home.dart';
 import 'package:lenguajes/page_error.dart';
 import 'package:lenguajes/pages.dart';
 import 'package:lenguajes/proveedores/crear_proveedores.dart';
 import 'package:lenguajes/proveedores/editar_proveedores.dart';
 import 'package:lenguajes/proveedores/list_proveedores.dart';
+import 'package:lenguajes/categorias/detalle_categoria.dart';
 
 class AppRoute {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -32,6 +34,31 @@ class AppRoute {
           builder: (_) => EditarProducto(producto: producto),
           fullscreenDialog: true,
         );
+
+      //**CATEGORIA
+      case '/listarcategoria':
+        return MaterialPageRoute(
+            builder: (_) => const ListarCategoria(
+                  elemento: '',
+                ));
+      case '/nuevocategoria':
+        return MaterialPageRoute(
+          builder: (_) => const NuevoCategoria(),
+          fullscreenDialog: true,
+        );
+      case '/detallecategoria':
+        return MaterialPageRoute(
+          builder: (_) =>
+              DetalleCategoriaPage(categoria: settings.arguments as Categoria),
+        );
+
+      case '/editarcategoria':
+        final categoria = settings.arguments as Categoria;
+        return MaterialPageRoute(
+          builder: (_) => EditarCategoria(categoria: categoria),
+          fullscreenDialog: true,
+        );
+
       //** PROVEEDORES
       case '/listaproveedores':
         return MaterialPageRoute(

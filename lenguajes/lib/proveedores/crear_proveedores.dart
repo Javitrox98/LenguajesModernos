@@ -120,11 +120,11 @@ class NuevoProveedores extends StatelessWidget {
               TextFormField(
                 controller: _giroController,
                 decoration: const InputDecoration(
-                  labelText: 'Giro',
+                  labelText: 'Ingredientes',
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'El giro es obligatorio';
+                    return 'El Ingrediente es obligatorio';
                   }
                   return null;
                 },

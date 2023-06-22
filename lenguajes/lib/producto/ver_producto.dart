@@ -75,6 +75,13 @@ class VerProducto extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
+                Text(
+                  'Categoria: ${producto.categoria}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 Text(
                   'Descripcion: ${producto.descripcion}',

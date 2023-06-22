@@ -173,7 +173,7 @@ class _ListarProveedoresState extends State<ListarProveedores> {
                           style: const TextStyle(fontSize: 14),
                         ),
                         Text(
-                          'giro : ${proveedores.giro} ',
+                          'Ingredientes : ${proveedores.giro} ',
                           style: const TextStyle(fontSize: 14),
                         ),
                         const SizedBox(height: 3),

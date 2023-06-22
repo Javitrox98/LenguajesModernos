@@ -165,11 +165,11 @@ class _EditarProveedoresState extends State<EditarProveedores> {
               TextFormField(
                 controller: _giroController,
                 decoration: const InputDecoration(
-                  labelText: 'Giro',
+                  labelText: 'Ingredientes',
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'El giro es obligatorio';
+                    return 'El ingrediente es obligatorio';
                   }
                   return null;
                 },

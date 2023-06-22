@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, library_private_types_in_public_api, prefer_final_fields
+// ignore_for_file: unused_field, library_private_types_in_public_api, prefer_final_fields, unnecessary_null_comparison
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lenguajes/pages.dart';
 import 'dart:io';
@@ -26,9 +26,29 @@ class _EditarProductoState extends State<EditarProducto> {
   String? _imageUrl;
   int _stock = 0;
 
+  List<String> _categorias = [];
+  String? _selectedCategoria;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadCategorias();
+    });
+  }
+
+  void loadCategorias() async {
+    final querySnapshot = await _firestore.collection('categorias').get();
+    _categorias = querySnapshot.docs.map((doc) {
+      final docData = doc.data();
+      final nombre = docData['nombre'].toString();
+      // ignore: unnecessary_string_interpolations
+      return '$nombre';
+    }).toList();
+
+    _selectedCategoria = widget.producto.categoria;
+
+    setState(() {});
 
     _codigoController.text = widget.producto.codigo;
     _nombreController.text = widget.producto.nombre;
@@ -122,6 +142,32 @@ class _EditarProductoState extends State<EditarProducto> {
                     color: Color.fromARGB(255, 153, 153, 153),
                   ),
                   enabled: false, // No se puede editar
+                ),
+                DropdownButtonFormField<String>(
+                  value: _selectedCategoria,
+                  icon: const Icon(Icons.arrow_downward),
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.category),
+                    labelText: 'Categoria',
+                  ),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedCategoria = newValue;
+                    });
+                  },
+                  items:
+                      _categorias.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'La categoria es obligatoria';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: _nombreController,
@@ -235,14 +281,18 @@ class _EditarProductoState extends State<EditarProducto> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate() &&
                           (_imageUrl != null ||
-                              widget.producto.imageUrl != null)) {
+                              widget.producto.imageUrl != null) &&
+                          (_selectedCategoria != null ||
+                              widget.producto.categoria != null)) {
                         final nuevoProducto = Producto(
                           id: widget.producto.id,
+                          categoria: _selectedCategoria!,
                           codigo: _codigoController.text,
                           nombre: _nombreController.text,
                           descripcion: _descripcionController.text,
                           precio: _precioController.text,
                           stock: int.parse(_stockController.text),
+                          // ignore: prefer_if_null_operators
                           imageUrl: _imageUrl != null
                               ? _imageUrl
                               : widget.producto.imageUrl,

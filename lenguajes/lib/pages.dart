@@ -10,3 +10,5 @@ export 'package:lenguajes/producto/crear_producto.dart';
 export 'package:lenguajes/producto/ver_producto.dart';
 export 'package:lenguajes/registro.dart';
 export 'package:lenguajes/recuperar_clave.dart';
+export 'package:lenguajes/categorias/list_categorias.dart';
+export 'package:lenguajes/categorias/editar_categoria.dart';

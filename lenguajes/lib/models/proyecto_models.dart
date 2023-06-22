@@ -8,7 +8,7 @@ class Producto {
   final String precio;
   int stock;
   final String? imageUrl;
-  int contador;
+  final String categoria;
 
   Producto({
     required this.id,
@@ -18,7 +18,7 @@ class Producto {
     required this.precio,
     required this.stock,
     required this.imageUrl,
-    this.contador = 0,
+    required this.categoria,
   });
 
   File? get imagenFile => null;
@@ -32,18 +32,49 @@ class Producto {
       'precio': precio,
       'stock': stock,
       'imageUrl': imageUrl,
+      'categoria': categoria,
     };
   }
 
   factory Producto.fromMap(Map<String, dynamic> map) {
     return Producto(
+        id: map['id'],
+        codigo: map['codigo'],
+        nombre: map['nombre'],
+        descripcion: map['descripcion'],
+        precio: map['precio'],
+        stock: map['stock'],
+        imageUrl: map['imageUrl'],
+        categoria: map['categoria']);
+  }
+}
+
+class Categoria {
+  final String id;
+  final String nombre;
+  final String? imageUrl;
+
+  Categoria({
+    required this.id,
+    required this.nombre,
+    required this.imageUrl,
+  });
+
+  File? get imagenFile => null;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nombre': nombre,
+      'imageUrl': imageUrl,
+    };
+  }
+
+  factory Categoria.fromMap(Map<String, dynamic> map) {
+    return Categoria(
       id: map['id'],
-      codigo: map['codigo'],
       nombre: map['nombre'],
-      descripcion: map['descripcion'],
-      precio: map['precio'],
-      stock: map['stock'],
-      imageUrl: map['imageUrl'], // Se ha cambiado de imagenFile a imageUrl
+      imageUrl: map['imageUrl'],
     );
   }
 }
