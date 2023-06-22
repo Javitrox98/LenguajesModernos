@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lenguajes/home.dart';
 import 'package:lenguajes/pages.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -38,11 +37,13 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Restaurant la Esquina',
-                      style: GoogleFonts.pacifico(
+                      style: TextStyle(
                         fontSize: 40,
+                        fontFamily: 'Roboto',
                         color: Colors.black,
+                        // Puedes ajustar otros atributos de estilo según tus necesidades
                       ),
                     ),
                     const SizedBox(height: 32),
