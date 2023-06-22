@@ -65,6 +65,7 @@ class NuevoProveedores extends StatelessWidget {
               TextFormField(
                 controller: _rutController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.perm_identity),
                   labelText: 'Rut',
                 ),
                 validator: (value) {
@@ -78,14 +79,13 @@ class NuevoProveedores extends StatelessWidget {
               TextFormField(
                 controller: _nombreController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
                   labelText: 'Nombre',
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'El nombre es obligatorio';
                   }
-
-                  // Expresión regular para validar que solo contenga letras
                   final lettersRegex = r'^[a-zA-Z]+$';
                   final regExp = RegExp(lettersRegex);
 
@@ -99,14 +99,13 @@ class NuevoProveedores extends StatelessWidget {
               TextFormField(
                 controller: _apellidoController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.perm_identity),
                   labelText: 'Apellido',
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'El Apellido es obligatorio';
                   }
-
-                  // Expresión regular para validar que solo contenga letras
                   final lettersRegex = r'^[a-zA-Z]+$';
                   final regExp = RegExp(lettersRegex);
 
@@ -120,6 +119,7 @@ class NuevoProveedores extends StatelessWidget {
               TextFormField(
                 controller: _giroController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.food_bank),
                   labelText: 'Ingredientes',
                 ),
                 validator: (value) {
@@ -130,52 +130,53 @@ class NuevoProveedores extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    // ignore: non_constant_identifier_names
-                    final NuevoProveedores = Proveedores(
-                      nombre: _nombreController.text,
-                      apellido: _apellidoController.text,
-                      rut: _rutController.text,
-                      giro: _giroController.text,
-                      id: '',
-                    );
-                    final snapshot = await _proveedoresCollection
-                        .where('nombre', isEqualTo: NuevoProveedores.nombre)
-                        .where('apellido', isEqualTo: NuevoProveedores.apellido)
-                        .where('rut', isEqualTo: NuevoProveedores.rut)
-                        .where('giro', isEqualTo: NuevoProveedores.giro)
-                        .get();
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      // ignore: non_constant_identifier_names
+                      final NuevoProveedores = Proveedores(
+                        nombre: _nombreController.text,
+                        apellido: _apellidoController.text,
+                        rut: _rutController.text,
+                        giro: _giroController.text,
+                        id: '',
+                      );
+                      final snapshot = await _proveedoresCollection
+                          .where('nombre', isEqualTo: NuevoProveedores.nombre)
+                          .where('apellido',
+                              isEqualTo: NuevoProveedores.apellido)
+                          .where('rut', isEqualTo: NuevoProveedores.rut)
+                          .where('giro', isEqualTo: NuevoProveedores.giro)
+                          .get();
 
-                    if (snapshot.docs.isEmpty) {
-                      // Si no hay documentos que coincidan, añadir el turno
-                      await _proveedoresCollection.add({
-                        'nombre': NuevoProveedores.nombre,
-                        'apellido': NuevoProveedores.apellido,
-                        'rut': NuevoProveedores.rut,
-                        'giro': NuevoProveedores.giro,
-                      }).then((DocumentReference document) {
-                        // Aquí creamos un nuevo objeto Turno con el id generado por Firestore.
-                        final nuevoProveedoresConId = Proveedores(
-                          id: document.id,
-                          nombre: NuevoProveedores.nombre,
-                          apellido: NuevoProveedores.apellido,
-                          rut: NuevoProveedores.rut,
-                          giro: NuevoProveedores.giro,
-                        );
-                        Navigator.pop(context, nuevoProveedoresConId);
-                      }).catchError((error) {
-                        // ignore: avoid_print
-                        print("Error al añadir el turno: $error");
-                      });
-                    } else {
-                      print(
-                          "Este turno ya existe, no se agregará un duplicado.");
+                      if (snapshot.docs.isEmpty) {
+                        await _proveedoresCollection.add({
+                          'nombre': NuevoProveedores.nombre,
+                          'apellido': NuevoProveedores.apellido,
+                          'rut': NuevoProveedores.rut,
+                          'giro': NuevoProveedores.giro,
+                        }).then((DocumentReference document) {
+                          final nuevoProveedoresConId = Proveedores(
+                            id: document.id,
+                            nombre: NuevoProveedores.nombre,
+                            apellido: NuevoProveedores.apellido,
+                            rut: NuevoProveedores.rut,
+                            giro: NuevoProveedores.giro,
+                          );
+                          Navigator.pop(context, nuevoProveedoresConId);
+                        }).catchError((error) {
+                          // ignore: avoid_print
+                          print("Error al añadir el proveedor: $error");
+                        });
+                      } else {
+                        print(
+                            "Este proveedor ya existe, no se agregará un duplicado.");
+                      }
                     }
-                  }
-                },
-                child: const Text('Guardar'),
+                  },
+                  child: const Text('Guardar'),
+                ),
               ),
             ],
           ),

@@ -160,7 +160,7 @@ class _NuevoProductoState extends State<NuevoProducto> {
                 TextFormField(
                   controller: _nombreController,
                   decoration: const InputDecoration(
-                    icon: Icon(Icons.cake_sharp),
+                    icon: Icon(Icons.fastfood),
                     labelText: 'Nombre producto',
                   ),
                   validator: (value) {

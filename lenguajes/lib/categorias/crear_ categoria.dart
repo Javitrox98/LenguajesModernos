@@ -97,7 +97,7 @@ class _NuevoCategoriaState extends State<NuevoCategoria> {
                 TextFormField(
                   controller: _nombreController,
                   decoration: const InputDecoration(
-                    icon: Icon(Icons.cake_sharp),
+                    icon: Icon(Icons.category),
                     labelText: 'Nombre Categoria',
                   ),
                   validator: (value) {

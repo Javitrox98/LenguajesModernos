@@ -102,15 +102,14 @@ class _EditarProveedoresState extends State<EditarProveedores> {
               TextFormField(
                 controller: _rutController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.perm_identity),
                   labelText: 'Rut',
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'El Rut es obligatorio';
                   }
-
-                  // Expresión regular para validar el Rut
-                  final rutRegex = r'^\d{7,8}-[kK\d]{1}$';
+                  const rutRegex = r'^\d{7,8}-[kK\d]{1}$';
                   final regExp = RegExp(rutRegex);
 
                   if (!regExp.hasMatch(value)) {
@@ -123,6 +122,7 @@ class _EditarProveedoresState extends State<EditarProveedores> {
               TextFormField(
                 controller: _nombreController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
                   labelText: 'Nombre',
                 ),
                 validator: (value) {
@@ -130,8 +130,7 @@ class _EditarProveedoresState extends State<EditarProveedores> {
                     return 'El nombre es obligatorio';
                   }
 
-                  // Expresión regular para validar que solo contenga letras
-                  final lettersRegex = r'^[a-zA-Z]+$';
+                  const lettersRegex = r'^[a-zA-Z]+$';
                   final regExp = RegExp(lettersRegex);
 
                   if (!regExp.hasMatch(value)) {
@@ -144,6 +143,7 @@ class _EditarProveedoresState extends State<EditarProveedores> {
               TextFormField(
                 controller: _apellidoController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.perm_identity),
                   labelText: 'Apellido',
                 ),
                 validator: (value) {
@@ -151,8 +151,7 @@ class _EditarProveedoresState extends State<EditarProveedores> {
                     return 'El Apellido es obligatorio';
                   }
 
-                  // Expresión regular para validar que solo contenga letras
-                  final lettersRegex = r'^[a-zA-Z]+$';
+                  const lettersRegex = r'^[a-zA-Z]+$';
                   final regExp = RegExp(lettersRegex);
 
                   if (!regExp.hasMatch(value)) {
@@ -165,6 +164,7 @@ class _EditarProveedoresState extends State<EditarProveedores> {
               TextFormField(
                 controller: _giroController,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.food_bank),
                   labelText: 'Ingredientes',
                 ),
                 validator: (value) {
@@ -175,23 +175,25 @@ class _EditarProveedoresState extends State<EditarProveedores> {
                 },
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final proveedoresEditado = Proveedores(
-                      rut: _rutController.text,
-                      nombre: _nombreController.text,
-                      apellido: _apellidoController.text,
-                      giro: _giroController.text,
-                      id: widget.proveedores
-                          .id, // Usamos el ID existente del proveedor
-                    );
-                    _updateProveedores(proveedoresEditado).then((_) {
-                      Navigator.pop(context);
-                    });
-                  }
-                },
-                child: const Text('Guardar cambios'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final proveedoresEditado = Proveedores(
+                        rut: _rutController.text,
+                        nombre: _nombreController.text,
+                        apellido: _apellidoController.text,
+                        giro: _giroController.text,
+                        id: widget.proveedores
+                            .id, // Usamos el ID existente del proveedor
+                      );
+                      _updateProveedores(proveedoresEditado).then((_) {
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: const Text('Guardar cambios'),
+                ),
               ),
             ],
           ),

@@ -8,7 +8,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text(
+          'Bienvenido',
+          style: TextStyle(fontSize: 28),
+        ),
+        centerTitle: true, // Centra el título
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
@@ -40,7 +44,9 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(child: Text('¡Bienvenido!')),
+      body: Center(
+        child: Image.asset('assets/home.gif'),
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -50,44 +56,65 @@ class HomePage extends StatelessWidget {
               child: Text('Menu'),
               decoration: BoxDecoration(
                 color: Colors.blue,
+                image: DecorationImage(
+                  image: AssetImage("assets/menu.jpg"),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            ListTile(
-              title: const Text('Productos'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ListarProducto(
+            Column(
+              children: [
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons
+                        .production_quantity_limits), // Icono para productos
+                    title: const Text('Productos'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ListarProducto(
                             elemento: '',
-                          )),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Categorías'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ListarCategoria(
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                    leading:
+                        const Icon(Icons.category), // Icono para categorías
+                    title: const Text('Categorías'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ListarCategoria(
                             elemento: '',
-                          )),
-                );
-              },
-              // Aquí puedes navegar a la página de categorías
-            ),
-            ListTile(
-              title: const Text('Proveedores'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ListarProveedores(
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.people), // Icono para proveedores
+                    title: const Text('Proveedores'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ListarProveedores(
                             elemento: '',
-                          )),
-                );
-              },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),
